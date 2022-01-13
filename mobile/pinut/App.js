@@ -1,112 +1,99 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
+import React from 'react'
+import { SafeAreaView, Text, View,StyleSheet } from 'react-native'
 
-import React from 'react';
-import type {Node} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import TreeView from 'react-native-final-tree-view'
+import { getStatusBarHeight } from "react-native-status-bar-height";
+import { Dimensions } from "react-native";
+import { isIphoneX, getBottomSpace } from "react-native-iphone-x-helper";
+import BottomNavigation from './components/bottomNavigation';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+const height= Dimensions.get("window").height - getStatusBarHeight() - getBottomSpace();
+const App = () => {
 
-const Section = ({children, title}): Node => {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-};
-
-const App: () => Node = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  const status = getStatusBarHeight(true);
+  const Height = () => {
+  if (isIphoneX()) {
+   
+        return Dimensions.get("window").height - status -          getBottomSpace();
+    } else {
+   
+      return Dimensions.get("window").height - status;
+    }
   };
 
+
+
+const family = [
+  {
+    id: 'Grandparent',
+    name: 'Grandpa',
+    age: 78,
+    children: [
+      {
+        id: 'Me',
+        name: 'Me',
+        age: 30,
+        children: [
+          {
+            id: 'Erick',
+            name: 'Erick',
+            age: 10,
+          },
+          {
+            id: 'Rose',
+            name: 'Rose',
+            age: 12,
+          },
+        ],
+      },
+    ],
+  }
+]
+
+const getIndicator = (isExpanded, hasChildrenNodes) => {
+  if (!hasChildrenNodes) {
+    return '-'
+  } else if (isExpanded) {
+    return '\\/'
+  } else {
+    return '>'
+  }
+}
+
+
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.js</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
+    <SafeAreaView style={{height:height}}>
+      <View style={styles.view}>
+      <TreeView
+        data={family} // defined above
+        renderNode={({ node, level, isExpanded, hasChildrenNodes }) => {
+          return (
+            <View style={{borderWidth:1}}>
+              <Text
+                style={{
+                  marginLeft: 25 * level,
+                }}
+              >
+                {getIndicator(isExpanded, hasChildrenNodes)} {node.name}
+              </Text>
+            </View>
+          )
+        }}
+      />
+      </View>
+      <BottomNavigation 
+        style={styles.bottomNavigation}
+      />
     </SafeAreaView>
-  );
-};
-
+  )
+}
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  bottomNavigation : {
+    
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+  view : {
+    height : height * 0.9
+  }
+})
 
-export default App;
+export default App
