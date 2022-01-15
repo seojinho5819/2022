@@ -9,6 +9,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import BottomNavigation from './components/bottomNavigation';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+import StackNavigationData from './routes/index';
 
 
 const HomeScreen = ({navigation}) => {
@@ -70,6 +71,7 @@ const App = () => {
         <Stack.Navigator>
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="Details" component={DetailsScreen} />
+          <Stack.Screen name="TreeView" component={DetailsScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaView>
